@@ -55,13 +55,13 @@ int main()
         tmpShape.setFillColor(colorVector.at(colorIndex));
 
         window.clear();
-        window.draw(tmpShape);
 
         auto ctr = shapePositions.size();
         for (auto iter = shapePositions.begin(); ctr--; iter++) {
             window.draw(shapePositions.at(ctr));
         }
 
+        window.draw(tmpShape);
         window.display();
     }
 
