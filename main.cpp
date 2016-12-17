@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 
+#include <algorithm>
+
 int main()
 {
     int mouseX = 0;
@@ -19,9 +21,9 @@ int main()
             }
         }
 
-        sf::Vector2i mousePos = sf::Mouse::getPosition();
-        mouseX = (int) mousePos.x;
-        mouseY = (int) mousePos.y;
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        mouseX = std::min(std::max((int) mousePos.x, 0), 800);
+        mouseY = std::min(std::max((int) mousePos.y, 0), 600);
 
         shape.setPosition(mouseX, mouseY);
 
