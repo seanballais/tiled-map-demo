@@ -15,7 +15,7 @@ int main()
     colorVector.push_back(sf::Color::Red);
     colorVector.push_back(sf::Color::Yellow);
     colorVector.push_back(sf::Color::Black);
-    //std::vector<sf::RectangleShape> shapePositions;
+    std::vector<sf::RectangleShape> shapePositions;
     int colorIndex = 0;
 
     int mouseX = 0;
@@ -29,6 +29,20 @@ int main()
     while (window.isOpen()) {
         sf::Event event;
 
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    colorIndex = (colorIndex + 1) % colorVector.size();
+                } else if (event.mouseButton.button == sf::Mouse::Left) {
+                    shapePositions.push_back(tmpShape);
+                }
+            }
+        }
+
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         mouseX = std::min(std::max(mousePos.x, 0), 800);
         mouseY = std::min(std::max(mousePos.y, 0), 600);
@@ -38,23 +52,16 @@ int main()
         mouseY = mousePos.y;
 
         tmpShape.setPosition(mouseX, mouseY);
-
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-
-            if (event.type == sf::Event::MouseButtonReleased) {
-                if (event.mouseButton.button == sf::Mouse::Right) {
-                    colorIndex = (colorIndex + 1) % colorVector.size();
-                }
-            }
-        }
-
         tmpShape.setFillColor(colorVector.at(colorIndex));
 
         window.clear();
         window.draw(tmpShape);
+
+        auto ctr = shapePositions.size();
+        for (auto iter = shapePositions.begin(); ctr--; iter++) {
+            window.draw(shapePositions.at(ctr));
+        }
+
         window.display();
     }
 
