@@ -3,26 +3,31 @@
 
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 sf::Vector2i getShapePosition(int mouseX, int mouseY);
 
 int main()
 {
+    std::vector<sf::Color> colorVector;
+    colorVector.push_back(sf::Color::Blue);
+    colorVector.push_back(sf::Color::Green);
+    colorVector.push_back(sf::Color::Red);
+    colorVector.push_back(sf::Color::Yellow);
+    colorVector.push_back(sf::Color::Black);
+    //std::vector<sf::RectangleShape> shapePositions;
+    int colorIndex = 0;
+
     int mouseX = 0;
     int mouseY = 0;
 
     sf::RenderWindow window(sf::VideoMode(800,600), "Tiled Map Demo");
-    sf::RectangleShape shape(sf::Vector2f(50,50));
-    shape.setFillColor(sf::Color::Green);
-    shape.setOrigin(25, 25);
+    sf::RectangleShape tmpShape(sf::Vector2f(50,50));
+    tmpShape.setFillColor(colorVector.at(colorIndex));
+    tmpShape.setOrigin(25, 25);
 
     while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
 
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         mouseX = std::min(std::max(mousePos.x, 0), 800);
@@ -32,10 +37,24 @@ int main()
         mouseX = mousePos.x;
         mouseY = mousePos.y;
 
-        shape.setPosition(mouseX, mouseY);
+        tmpShape.setPosition(mouseX, mouseY);
+
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::MouseButtonReleased) {
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    colorIndex = (colorIndex + 1) % colorVector.size();
+                }
+            }
+        }
+
+        tmpShape.setFillColor(colorVector.at(colorIndex));
 
         window.clear();
-        window.draw(shape);
+        window.draw(tmpShape);
         window.display();
     }
 
